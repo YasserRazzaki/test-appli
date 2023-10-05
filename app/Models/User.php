@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password','first_name','last_name','profile_picture'
     ];
 
     /**
@@ -42,4 +42,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function friends() {
+        return $this->belongsToMany(User::class, 'amities', 'friend_id', 'user_id' );
+    }
 }
