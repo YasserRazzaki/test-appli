@@ -9,40 +9,42 @@ use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
-    public function redirectToGoogle()
+    public function redirectToGoogle($provider)
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver($provider)->redirect();
     }
-    public function handleGoogleCallback()
-    {
-        try {
-            $user = Socialite::driver('google')->user();
-        } catch (\Exception $e) {
-            return redirect('/login')->withErrors(['message' => 'Erreur lors de la connexion avec Google.']);
-        }
-    
-        // Vérifiez si l'utilisateur existe déjà dans votre base de données
+
+    public function handleGoogleCallback($provider)
+    {            $user = Socialite::driver($provider)->user();
+        // try {
+
+        // } catch (\Exception $e) {
+        //     return response()->json(['error' => 'Erreur lors de la connexion avec Google.']);
+        // }
+
         $existingUser = User::where('email', $user->email)->first();
-    
+
         if ($existingUser) {
             // L'utilisateur existe déjà, connectez-le
             Auth::login($existingUser);
         } else {
-            // L'utilisateur n'existe pas, créez un nouvel utilisateur
             $newUser = new User();
-            $newUser->name = $user->first_name;
+            $newUser->username = $user->name;
             $newUser->email = $user->email;
             $newUser->save();
-    
-            Auth::login($newUser); // Connectez le nouvel utilisateur
+
+            Auth::login($newUser);
+
+            // Créez un message de bienvenue
+            return $newUser;
         }
-        return redirect('/dashboard'); // Redirigez l'utilisateur après la connexion
+
+        return response()->json(['message' => 'Connected successfully !']);
     }
-    
+
     public function logout()
-{
-    Auth::logout();
-   echo "Logout success";
-   return redirect('/');
-}
+    {
+        Auth::logout();
+        return "Logout success";
+    }
 }

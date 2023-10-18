@@ -84,6 +84,6 @@ Route::get('/amis', function () {
 });
 
 use App\Http\Controllers\Auth\LoginController;
-Route::get('/login/google', 'App\Http\Controllers\Auth\LoginController@redirectToGoogle');
-Route::get('/login/google/callback', 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback');
+Route::get('/login/{provider}', 'App\Http\Controllers\Auth\LoginController@redirectToGoogle');
+Route::get('/login/{provider}/callback', 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback');
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
