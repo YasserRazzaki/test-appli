@@ -61,21 +61,7 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('/att', function () {
     $users = DB::table('users')->get();
-    foreach ($users as $user) {
-        $username = $user->username;
-        $password = $user->password;
-        $prenom = $user->first_name;
-        $nom = $user->last_name;
-        $email = $user->email;
-        // Vous pouvez maintenant utiliser ces valeurs comme vous le souhaitez
-        // Par exemple, afficher les valeurs ou les stocker dans une autre variable
-        return "Je suis ".$username."<br>Mon vrai nom est:".$prenom." ".$nom."<br>";
-
-    }
-
-    // Vous pouvez également renvoyer ces valeurs au format JSON si vous le souhaitez
-   
-});
+           return $users.'<br>'; });
 
 use App\Models\Amitie;
 Route::get('/amis', function () {
@@ -84,6 +70,15 @@ Route::get('/amis', function () {
 });
 
 use App\Http\Controllers\Auth\LoginController;
-Route::get('/login/{provider}', 'App\Http\Controllers\Auth\LoginController@redirectToGoogle');
-Route::get('/login/{provider}/callback', 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback');
+Route::get('/login/{provider}', 'App\Http\Controllers\Auth\LoginController@redirectToProvider');
+Route::get('/login/{provider}/callback', 'App\Http\Controllers\Auth\LoginController@handleProviderCallback');
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/profile/{username}', 'App\Http\Controllers\ProfileController@show');
+Route::group(['prefix' => 'quiz'], function(){
+    Route::get('/logo', 'App\Http\Controllers\QuizController@indexLogo');
+    Route::get('/joueur', 'App\Http\Controllers\QuizController@indexJoueur');
+});
+Route::get('/posts', function () {
+    $posts = DB::table('posts')->get();
+    return $posts.'<br>'; 
+});

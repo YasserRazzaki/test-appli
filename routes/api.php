@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AmitieController;
+use App\Http\Controllers\QuizController;
 use App\Models\Post;
 
 /*
@@ -22,18 +23,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix'=>'post'], function(){
-    Route::get('/',[PostController::class, 'index']);
-    Route::get('/{id}');
-    Route::post('/',[PostController::class, 'store']);
-    Route::put('/{id}');
-    Route::delete('/{id}');
-});
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::group(['prefix'=>'post'], function(){
+        Route::get('/',[PostController::class, 'index']);
+        Route::get('/{id}',[PostController::class, 'show']);
+        Route::post('/',[PostController::class, 'store']);
+        Route::put('/{id}',[PostController::class, 'update']);
+        Route::delete('/{id}',[PostController::class, 'destroy']);
+    });
 
-Route::group(['prefix'=>'post'], function(){
-    Route::get('/',[AmitieController::class, 'index']);
-    Route::get('/{id}');
-    Route::post('/',[AmitieController::class, 'store']);
-    Route::put('/{id}');
-    Route::delete('/{id}');
+    Route::group(['prefix' => 'quiz'], function(){
+        Route::get('/logo', [QuizController::class, 'indexLogo']);
+        //Route::get('/joueur', [QuizController::class, 'indexJoueur']);
+        Route::get('/joueur', 'App\Http\Controllers\QuizController@indexJoueur');
+    });
 });
