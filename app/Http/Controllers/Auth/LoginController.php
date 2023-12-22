@@ -12,17 +12,20 @@ class LoginController extends Controller
 {
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->stateless()->redirect();
     }
 
     public function handleProviderCallback($provider) {
-        $user = Socialite::driver($provider)->user();    
+        $user = Socialite::driver($provider)->stateless()->user();    
         $existingUser = User::where('email', $user->email)->first();
 
         if (!$existingUser) {
             $newUser = new User();
             $newUser->username = $user->name;
             $newUser->email = $user->email;
+            $newUser->first_name = $user->first_name;
+            $newUser->last_name = $user->last_name;
+            $newUser->user_image = $user->getAvatar();
             $newUser->save();
             Auth::login($newUser);
             // Créez un message de bienvenue
@@ -51,4 +54,14 @@ class LoginController extends Controller
 
     return response()->json(['error' => 'No active token found'], 400);
 }
+public function loginCredentials(Request $request)
+{
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        $userCredentials = Auth::user();
+        return response()->json(['user' => $userCredentials]);
+    }
+
+    return response()->json(['error' => 'Invalid credentials'], 401);}
 }
