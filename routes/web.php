@@ -68,16 +68,13 @@ Route::get('/amis', function () {
     $amis = Amitie::all();
     return response()->json($amis);
 });
-
+Route::get('/logo', 'App\Http\Controllers\QuizController@indexLogo');
 use App\Http\Controllers\Auth\LoginController;
 Route::get('/login/{provider}', 'App\Http\Controllers\Auth\LoginController@redirectToProvider');
 Route::get('/login/{provider}/callback', 'App\Http\Controllers\Auth\LoginController@handleProviderCallback');
+Route::post('/loginCredentials', 'AuthController@loginCredentials');
 Route::get('/logout', 'App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/profile/{username}', 'App\Http\Controllers\ProfileController@show');
-Route::group(['prefix' => 'quiz'], function(){
-    Route::get('/logo', 'App\Http\Controllers\QuizController@indexLogo');
-    Route::get('/joueur', 'App\Http\Controllers\QuizController@indexJoueur');
-});
 Route::get('/posts', function () {
     $posts = DB::table('posts')->get();
     return $posts.'<br>'; 

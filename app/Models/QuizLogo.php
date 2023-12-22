@@ -12,4 +12,8 @@ class QuizLogo extends Model
     protected $cast = [
         'proposition' => 'array'
     ];
+protected $hidden = [
+    "propositions"
+];
+    
 }
