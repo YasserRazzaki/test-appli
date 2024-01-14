@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuizJoueur;
 use App\Models\QuizLogo;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,10 @@ class QuizController extends Controller
     public function indexLogo()
     { $quizData = QuizLogo::all();
       return response()->json($quizData);
+    }
+    public function indexJoueur()
+    { $quizJouData = QuizJoueur::all();
+      return response()->json($quizJouData);
     }
 }
 

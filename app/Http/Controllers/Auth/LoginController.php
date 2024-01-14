@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Laravel\Sanctum\Contracts\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,14 +55,18 @@ class LoginController extends Controller
 
     return response()->json(['error' => 'No active token found'], 400);
 }
-public function loginCredentials(Request $request)
+public function loginCre(Request $request)
 {
-    $credentials = $request->only('email', 'password');
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
     if (Auth::attempt($credentials)) {
-        $userCredentials = Auth::user();
-        return response()->json(['user' => $userCredentials]);
+        $user = Auth::user();
+        $token = $user->createToken('token-name')->plainTextToken;
+        return response()->json(['token' => $token]);
     }
 
-    return response()->json(['error' => 'Invalid credentials'], 401);}
-}
+    return response()->json(['message' => 'Invalid credentials'], 401);
+}}

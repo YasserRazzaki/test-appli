@@ -57,6 +57,7 @@ Route::get('/utilisateurs', function () {
 });
 
 Route::post('/inscription', 'InscriptionController@inscription');
+
 use Illuminate\Support\Facades\DB;
 
 Route::get('/att', function () {
@@ -78,4 +79,11 @@ Route::get('/profile/{username}', 'App\Http\Controllers\ProfileController@show')
 Route::get('/posts', function () {
     $posts = DB::table('posts')->get();
     return $posts.'<br>'; 
+});
+
+Route::group(['prefix' => 'quiz'], function(){
+    Route::get('/logo', 'App\Http\Controllers\QuizController@indexLogo');
+    // post '/logo/{id}/response'
+  //  Route::get('/logo', 'App\Http\Controllers\QuizController@indexLogoRandom');
+    Route::get('/joueur', 'App\Http\Controllers\QuizController@indexJoueur');
 });

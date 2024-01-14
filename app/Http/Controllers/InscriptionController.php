@@ -13,27 +13,22 @@ class InscriptionController extends Controller
         $request->validate([
             'username' => 'required|unique:users',
             'password' => 'required|min:6',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required',
+            'email' => 'required',
         ]);
 
         // Enregistrez les données dans la base de données
         DB::table('users')->insert([
             'username' => $request->input('username'),
             'password' => Hash::make($request->input('password')),
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'date_of_birth' => $request->input('date_of_birth'),
-            'gender' => $request->input('gender'),
+            'email' => $request->input('email'),
         ]);
 
         // Retournez un message de succès ou d'erreur en fonction du résultat de l'insertion
         if (DB::table('users')->latest('id')->first()) {
-            return 'Inscription réussie !';
+            return response()->json(['message' => 'Inscription réussie !']);
         } else {
-            return 'Erreur lors de l\'inscription.';
+            return response()->json(['message' => 'Erreur lors de l\'inscription.'], 500);
         }
+        
     }
 }
